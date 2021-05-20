@@ -1,0 +1,14 @@
+<% 
+
+calcProjectRating = function(project){
+  let total = 0, num= 0;
+  for(let rating of project.ratings){
+    total += rating.rating;
+    num++;
+  }
+  
+  const overallRating = Math.round(total/num)
+  return overallRating || 0;
+}
+
+%> 

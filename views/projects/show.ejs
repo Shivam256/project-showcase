@@ -1,0 +1,78 @@
+<% layout('layouts/boilerplate') -%>
+<%- include('../partials/functions.ejs')  %> 
+<div class="row">
+  <div class="col-6 ">
+    <div class="card shadow mb-5">
+      <img src="<%= project.image %>" class="card-img-top img-fluid" alt="...">
+      <div class="card-body">
+        <div class="card-title"><%= project.title %></div>
+        <div class="card-text mb-3"><%= project.description  %> </div>
+        <% if(currentUser && project.author.equals(currentUser._id)){ %>
+
+        <a href="/projects/<%= project._id %>/edit" class="btn btn-info text-light d-inline">Edit</a>
+        <form action="/projects/<%= project._id  %>?_method=DELETE" class="d-inline" method="POST">
+          <button class="btn btn-danger">Delete</button>
+        </form>
+        <% } %> 
+        <p class="starability-result" data-rating="<%= calcProjectRating(project)  %>">
+          Rated: <%= calcProjectRating(project)  %> stars
+        </p>  
+        
+      </div>
+    </div>
+  </div>
+  <div class="col-6 ">
+    <h3>Rate the project:</h3>
+
+    <form action="/projects/<%= project._id %>/rating" method="POST" class="mb-3">
+      <fieldset class="starability-basic">
+        <input type="radio" id="no-rate" class="input-no-rate" name="rating[rating]" value="1" checked
+          aria-label="No rating." />
+        <input type="radio" id="first-rate1" name="rating[rating]" value="1" />
+        <label for="first-rate1" title="Terrible">1 star</label>
+        <input type="radio" id="first-rate2" name="rating[rating]" value="2" />
+        <label for="first-rate2" title="Not good">2 stars</label>
+        <input type="radio" id="first-rate3" name="rating[rating]" value="3" />
+        <label for="first-rate3" title="Average">3 stars</label>
+        <input type="radio" id="first-rate4" name="rating[rating]" value="4" />
+        <label for="first-rate4" title="Very good">4 stars</label>
+        <input type="radio" id="first-rate5" name="rating[rating]" value="5" />
+        <label for="first-rate5" title="Amazing">5 stars</label>
+      </fieldset>
+
+      <div class="mb-3">
+        <label for="review" class="form-label">Review:</label>
+        <textarea name="rating[body]" class="form-control" id="rating[body]" cols="10" rows="3"></textarea>
+      </div>
+      <button class="btn btn-primary">Rate</button>
+    </form>
+
+
+    <% if(project.ratings){%>
+    <% for(let rating of project.ratings){ %>
+    <div class="ratings-container">
+      <div class="card mb-3">
+        <div class="card-body">
+          <div class="card-title">
+            <p class="starability-result" data-rating="<%= rating.rating  %>">
+              Rated: <%= rating.rating  %> stars
+            </p>
+          </div>
+          <div class="card-text mb-3">
+            <%= rating.body  %>
+          </div>
+          <% if(currentUser && rating.author.equals(currentUser._id)){ %>
+          <form action="/projects/<%= project._id%>/rating/<%=rating._id %>?_method=DELETE" method="POST">
+            <button class="btn btn-sm btn-danger">Delete</button></form>
+          <% } %>
+        </div>
+      </div>
+    </div>
+    <% } %>
+    <% } %>
+  </div>
+
+
+
+</div>
+</div>

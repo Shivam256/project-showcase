@@ -1,0 +1,26 @@
+<% layout('layouts/boilerplate') -%>
+<h1 >Edit project</h1>
+
+<div class="row">
+  <div class="col-6 offset-3">
+    <form action="/projects/<%= project._id %>?_method=PUT" method="POST" novalidate class="validated-form">
+      <div class="mb-3">
+        <label for="title" class="form-label">Project Title:</label>
+        <input type="text" name="project[title]" class="form-control" id="title" value="<%= project.title %>" required>
+        <div class="valid-feedback">Looks good!</div>
+      </div>
+      <div class="mb-3">
+        <label for="description" class="form-label">Project Description:</label>
+        <textarea name="project[description]" class="form-control" id="description" cols="30" rows="4" required><%= project.description  %></textarea>
+        <div class="valid-feedback">Looks good!</div>
+      </div>
+      <div class="mb-3">
+        <label for="image" class="form-label">Project Image Url:</label>
+        <input type="text" name="project[image]" class="form-control" id="image" value="<%= project.image  %>" required>
+        <div class="valid-feedback">Looks good!</div>
+      </div>
+    
+      <button class="btn btn-success">Edit Project</button>
+    </form>
+  </div>
+</div>

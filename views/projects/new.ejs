@@ -1,0 +1,22 @@
+<% layout('layouts/boilerplate') -%>
+<h1>Post a project</h1>
+
+<form action="/projects" method="POST" novalidate class="validated-form">
+  <div class="mb-3">
+    <label for="title" class="form-label">Project Title:</label>
+    <input type="text" name="project[title]" class="form-control" id="title" required>
+    <div class="valid-feedback">Looks good!</div>
+  </div>
+  <div class="mb-3">
+    <label for="description" class="form-label">Project Description:</label>
+    <textarea name="project[description]" class="form-control" id="description" cols="30" rows="4" required></textarea>
+    <div class="valid-feedback">Looks good!</div>
+  </div>
+  <div class="mb-3">
+    <label for="image" class="form-label">Project Image Url:</label>
+    <input type="text" name="project[image]" class="form-control" id="image" required>
+    <div class="valid-feedback">Looks good!</div>
+  </div>
+
+  <button class="btn btn-success">Create Project</button>
+</form>
