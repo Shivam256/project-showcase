@@ -2,14 +2,28 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const Rating = require('./rating');
 
+
+const ImageSchema = new Schema({
+  url:String,
+  filename:String
+})
+
 const projectSchema = new Schema({
   title:{
     type:String,
   },
-  image:String,
+  images:[ImageSchema],
   description:{
     type:String,
   },
+  links:{
+    githubLink:String,
+    hostedLink:String,
+  },
+  stack:[{
+    name:String,
+    dataIcon:String
+  }],
   ratings:[
     {
       type:Schema.Types.ObjectId,

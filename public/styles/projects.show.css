@@ -1,0 +1,32 @@
+.rating-section{
+  /* border: 1px solid black; */
+  padding: 1em;
+  /* border-radius: 20px; */
+}
+
+.link-section{
+  padding: 1em;
+}
+
+.stack-section{
+  padding: 1em;
+}
+
+.stack-icon-container{
+  text-align: center;
+  padding: 1em 0;
+  margin: 1em 0;
+  border-radius: 10px;
+}
+.stack-container{
+  width: 90%;
+  margin: 0.5em auto;
+}
+.stack-name{
+  margin-bottom: 0;
+}
+
+.stack-icon{
+  width: 7vh;
+  height: 7vh;
+}

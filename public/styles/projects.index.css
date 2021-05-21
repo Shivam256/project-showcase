@@ -1,0 +1,25 @@
+.project-user-section{
+  width: 100%;
+  min-height: 7vh;
+  padding: 0.5em;
+}
+
+.profilepic-project-card{
+  min-height: 6vh;
+  max-height: 6vh;
+  max-width: 6vh;
+  border-radius: 100%;
+  background-color: aqua;
+  margin-left: 20%;
+  background-position: center;
+  background-size: cover;
+  
+}
+
+.username-project-card{
+  min-height: 100%;
+  max-height: 7vh;
+  /* background-color: aliceblue; */
+  padding: 1em 0;
+  font-weight: 600;
+}

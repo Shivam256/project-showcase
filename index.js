@@ -1,3 +1,7 @@
+if (process.NODE_ENV !== "production") {
+  require('dotenv').config();
+}
+
 const express = require('express');
 const app = express();
 const path = require('path');
@@ -20,6 +24,17 @@ const session = require('express-session');
 const flash = require('connect-flash');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
+const multer = require('multer');
+const {
+  storage
+} = require('./cloudinary/index');
+const upload = multer({
+  storage
+});
+const {
+  stackList,getStackByName
+} = require('./public/scripts/stack-list');
+
 
 mongoose.connect('mongodb://localhost:27017/project-showcase', {
     useNewUrlParser: true,
@@ -79,32 +94,40 @@ app.get('/', (req, res) => {
 })
 
 app.get('/projects', catchAsync(async (req, res) => {
-  const projects = await Project.find({}).populate('ratings');
+  const projects = await Project.find({}).populate('ratings').populate('author');
   res.render('projects/index', {
     projects
   });
 }))
 
 app.get('/projects/new', isLoggedIn, (req, res) => {
-  res.render('projects/new');
+  res.render('projects/new',{stackList});
 })
 
-app.post('/projects', isLoggedIn, validateProject, catchAsync(async (req, res) => {
+app.post('/projects', isLoggedIn, upload.array('image'), catchAsync(async (req, res) => {
   const project = new Project(req.body.project);
   project.author = req.user._id;
+  project.links = req.body.links;
+  project.stack = getStackByName(req.body.stacks);
+  project.images = req.files.map(f => ({
+    url: f.path,
+    filename: f.filename
+  }));
   await project.save();
   req.flash('success', 'Successfully posted your project');
   res.redirect(`/projects/${project._id}`);
 }))
+
+
 
 app.get('/projects/:id', catchAsync(async (req, res) => {
   const {
     id
   } = req.params;
   const project = await Project.findById(id).populate({
-    path:'ratings',
-    populate:{
-      path:'author'
+    path: 'ratings',
+    populate: {
+      path: 'author'
     }
   }).populate('author');
   console.log(project);
@@ -127,7 +150,7 @@ app.get('/projects/:id/edit', isLoggedIn, catchAsync(async (req, res) => {
   });
 }))
 
-app.put('/projects/:id', isLoggedIn, isProjectAuthor,catchAsync(async (req, res) => {
+app.put('/projects/:id', isLoggedIn, isProjectAuthor, catchAsync(async (req, res) => {
   const {
     id
   } = req.params;
@@ -138,7 +161,7 @@ app.put('/projects/:id', isLoggedIn, isProjectAuthor,catchAsync(async (req, res)
   res.redirect(`/projects/${id}`);
 }))
 
-app.delete('/projects/:id', isLoggedIn, isProjectAuthor,catchAsync(async (req, res) => {
+app.delete('/projects/:id', isLoggedIn, isProjectAuthor, catchAsync(async (req, res) => {
   const {
     id
   } = req.params;
@@ -165,7 +188,7 @@ app.post('/projects/:id/rating', isLoggedIn, validateRating, catchAsync(async (r
 
 ///projects/<%= project._id%>/ratings/<%rating._id%>
 //"/projects/<%= project._id%>/rating/<%rating._id %>?_method=DELETE"
-app.delete('/projects/:id/rating/:ratingId', isLoggedIn, isRatingtAuthor,catchAsync(async (req, res) => {
+app.delete('/projects/:id/rating/:ratingId', isLoggedIn, isRatingtAuthor, catchAsync(async (req, res) => {
   const {
     id,
     ratingId
