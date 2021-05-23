@@ -1,0 +1,34 @@
+<% layout('layouts/boilerplate') -%>
+<link rel="stylesheet" href="/styles/user.activity.css">
+
+<h1>Activity Page</h1>
+<div class="row">
+  <div class="col-7"></div>
+  <div class="col-5">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Collab Requests:</h4>
+        <% for(let collabUser of user.activity.collabRequests){ %>
+        <div class="collab-user row">
+          <div class="col-2" >
+            <div class="collab-user-pic" style="background-image: url('<%= collabUser.profilePic.url %>');"></div>
+          </div>
+          <div class="col-4">
+            <div class="collab-user-username"><%= collabUser.username %></div>
+          </div>
+          <div class="col-3">
+            <div class="collab-user-accept-btn">
+              <form action="/user/<%= collabUser._id %>/collab/<%= user._id  %>/accepted" method="POST"> <button class="btn btn-sm btn-outline-success">Accept</button></form>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="collab-user-accept-btn">
+              <form action="/user/<%= collabUser._id %>/collab/<%= user._id  %>/rejected" method="POST"> <button class="btn btn-sm btn-outline-danger">Ignore</button></form>
+            </div>
+          </div>
+        </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</div>

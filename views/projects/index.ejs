@@ -2,58 +2,109 @@
 <%- include('../partials/functions.ejs')  %>
 <link rel="stylesheet" href="/styles/projects.index.css">
 <!-- <h1>PROJECTS WILL GO HERE</h1> -->
-<div class="row">
-  <div class="col-6 project-container ">
-    <% for(let project of projects){ %>
-    <div class="card mb-5 shadow">
-      <div class="project-user-section row justify-content-start">
-        <div class="col-2 ">
-          <div class="profilepic-project-card" style='background-image:url("https://i.pinimg.com/originals/d9/8f/c4/d98fc4ca483cdbe4e2f2a32edfbe62de.jpg")'></div>
-        </div>
-        <div class="col-5">
-          <div class="username-project-card ">
-            <%= project.author.username %> 
+<div class="home-screen">
+  <div class="row">
+
+    <div class="col-8 project-container ">
+      <% for(let project of projects.reverse()){ %>
+      <div class="card mb-5 project">
+        <div class="project-user-section row justify-content-start">
+          <div class="col-2">
+            <div class="profilepic-project-card" style="background-image:url('<%= project.author.profilePic.url%>')">
+            </div>
+          </div>
+          <div class="col-5">
+            <div class="username-project-card ">
+              <a href="/user/<%= project.author._id  %>"><%= project.author.username %></a>
+            </div>
           </div>
         </div>
-      </div>
-      <div id="carouselExampleFade" class="carousel slide carousel-fade" data-bs-ride="carousel">
-        <div class="carousel-inner">
-          <% project.images.forEach((img,i)=>{%>
+        <div id="carouselExampleFade" class="carousel slide carousel-fade" data-bs-ride="carousel">
+          <div class="carousel-inner">
+            <% project.images.forEach((img,i)=>{%>
             <div class="carousel-item <%= i==0?'active':''%> ">
               <img src="<%= img.url %>" class="d-block w-100" alt="...">
             </div>
             <% }) %>
+          </div>
+          <% if(project.images.length){ %>
+          <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade"
+            data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleFade"
+            data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+          <% } %>
         </div>
-        <% if(project.images.length){ %> 
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="prev">
-          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="next">
-          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Next</span>
-        </button>
-        <% } %> 
-      </div>
-      <div class="card-body">
-        <h5 class="card-title"><%= project.title  %> </h5>
-        <p class="card-text"><%= project.description %> </p>
-      </div>
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item">
-          <p class="starability-result" data-rating="<%= calcProjectRating(project)  %>">
-            Rated: <%= calcProjectRating(project)  %> stars
-          </p>
-        </li>
-        <!-- <li class="list-group-item">
-
-        </li> -->
+        <div class="card-body">
+          <h5 class="card-title"><%= project.title  %> </h5>
+          <p class="card-text"><%= project.description %> </p>
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+            <p class="starability-result" data-rating="<%= calcProjectRating(project)  %>">
+              Rated: <%= calcProjectRating(project)  %> stars
+            </p>
+          </li>
+          <!-- <li class="list-group-item">
     
-      </ul>
-      <div class="card-body d-grid gap-2">
-        <a href="/projects/<%=project._id%>" class="btn btn-primary p-2" type="button">Explore</a>
+            </li> -->
+
+        </ul>
+        <div class="card-body d-grid gap-2">
+          <a href="/projects/<%=project._id%>" class="btn btn-primary p-2" type="button">Explore</a>
+        </div>
+      </div>
+      <% } %>
+    </div>
+
+    <% if(currentUser && collabList.length){ %>
+    <div class="col-4">
+      <div class="card collab-suggestions">
+        <div class="card-body">
+          <h5 class="card-title">Collab Suggestions:</h5>
+          <% for(let sUser of collabList){ %>
+          <div class="suggested-user row">
+            <div class="col-2">
+              <div class="suggested-user-pic" style="background-image:url('<%= sUser.profilePic.url %>');"></div>
+            </div>
+            <div class="col-5">
+              <div class="suggested-user-username"><a href="/user/<%= sUser._id  %>"><%= sUser.username  %></a></div>
+            </div>
+            <div class="col-5">
+              <div class="suggested-user-collab-btn">
+                
+                <form action="user/<%= currentUser._id %>/collab/<%= sUser._id  %>" method="POST">     
+                    <% if(checkCollabRequested(currentUser,sUser)){ %>
+                      <button class="btn btn-sm btn-primary">requested</button>
+                    <% }else{ %>
+                      <button class="btn btn-sm btn-outline-primary">collab</button>
+                    <% } %>
+                </form>
+
+              </div>
+            </div>
+          </div>
+          <% } %>
+        </div>
       </div>
     </div>
     <% } %>
   </div>
 </div>
+
+<!-- <script>
+  const buttn = document.querySelector('.collab-btn');
+  buttn.addEventListener('click',()=>{
+    if(buttn.textContent == 'collab'){
+      buttn.textContent = 'requested';
+    }
+    else{
+      buttn.textContent = 'collab';
+    }
+  })
+</script> -->

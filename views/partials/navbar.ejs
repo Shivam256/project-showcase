@@ -8,14 +8,18 @@
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav ms-auto">
         <a class="nav-link active" href="/projects">Home</a>
-        <a class="nav-link" href="#">Activity</a>
         <a class="nav-link" href="/projects/new">Post Project</a>
-        <% if(!currentUser){ %> 
+        <% if(!currentUser){ %>
+
         <a class="nav-link" href="/register">Register</a>
         <a class="nav-link" href="/login">Login</a>
-        <% }else{ %> 
+        <% }else{ %>
+
+        <a class="nav-link" href="/user/<%= currentUser._id  %>/messages">Messages</a>
+        <a class="nav-link" href="/user/<%= currentUser._id %>/activity">Activity</a>
         <a class="nav-link" href="/logout">Logout</a>
-        <% } %>       
+        <a class="nav-link" href="/user/<%= currentUser._id  %>">My Account</a>
+        <% } %>
       </div>
     </div>
   </div>

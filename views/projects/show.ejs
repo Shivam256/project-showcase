@@ -3,13 +3,14 @@
 <link rel="stylesheet" href="/styles/projects.show.css">
 <div class="row">
   <div class="col-6 ">
-    <h2><%= project.title.toUpperCase() %> </h2>
-    <div class="card shadow mb-5 mt-2">
+    <h2 class="d-inline"><%= project.title.toUpperCase() %> </h2>
+    <h5 class="d-inline"> by <a href="/user/<%= project.author._id %>"><%= project.author.username  %></a></h5>
+    <div class="card shadow mb-5 mt-3">
       <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
           <% project.images.forEach((img,i)=>{%>
           <div class="carousel-item <%= i==0?'active':''%> ">
-            <img src="<%= img.url %>" class="d-block w-100" alt="...">
+            <img src="<%= img.url %>" class="d-block w-100 carousel-image" alt="...">
           </div>
           <% }) %>
         </div>
@@ -38,39 +39,39 @@
           <button class="btn btn-danger">Delete</button>
         </form>
         <% } %>
-        
+
 
       </div>
     </div>
   </div>
-  <div class="col-6 ">
+  <div class="col-6 project-subinfo-container">
 
     <% if(project.links.githubLink || project.links.hostedLink){ %>
-      <div class="link-section shadow mb-3">
-        <h3>View Project!</h3>
-        <% if(project.links.githubLink){ %> 
-          <a href="<%= project.links.githubLink %>" target="_blank" class="btn btn-outline-primary m-2 ml-0">Guthub Repo</a>
-        <% } %>   
-        <% if(project.links.hostedLink){ %> 
-          <a href="<%= project.links.hostedLink  %>" target="_blank" class="btn btn-outline-primary m-2">Website</a>
-        <% } %>   
-      </div>
+    <div class="link-section shadow mb-3">
+      <h3>View Project!</h3>
+      <% if(project.links.githubLink){ %>
+      <a href="<%= project.links.githubLink %>" target="_blank" class="btn btn-outline-primary m-2 ml-0">Guthub Repo</a>
+      <% } %>
+      <% if(project.links.hostedLink){ %>
+      <a href="<%= project.links.hostedLink  %>" target="_blank" class="btn btn-outline-primary m-2">Website</a>
+      <% } %>
+    </div>
     <% } %>
     <% if(project.stack.length){ %>
-      <div class="stack-section shadow mb-3">
-        <h3>Project Stack</h3>
-        <div class="row justify-content-evenly">
-          <% for(let stack of project.stack){ %> 
-            <div class="col-2">
-              <div class="stack-icon-container">
-                <span class="iconify stack-icon" data-icon="<%= stack.dataIcon  %>" data-inline="false"></span>
-                <p class="stack-name"><%= stack.name %></p>
-              </div>
-            </div>
-          <% } %>   
-        </div>
+    <div class="stack-section shadow mb-3">
+      <h3>Project Stack</h3>
+      <div class="row justify-content-evenly stacks-main-container">
+        <% for(let stack of project.stack){ %>
+        <!-- <div class="col-2"> -->
+        <span class="stack-icon-container">
+          <span class="iconify stack-icon" data-icon="<%= stack.dataIcon  %>" data-inline="false"></span>
+          <p class="stack-name"><%= stack.name %></p>
+        </span>
+        <!-- </div> -->
+        <% } %>
       </div>
-    <% } %> 
+    </div>
+    <% } %>
 
 
     <div class="rating-section shadow">
@@ -103,20 +104,26 @@
       <% for(let rating of project.ratings){ %>
       <div class="ratings-container">
         <div class="card mb-3">
-          <div class="card-body">
-            <div class="card-title">
-              <p class="starability-result" data-rating="<%= rating.rating  %>">
-                Rated: <%= rating.rating  %> stars
-              </p>
+          <div class="rater-info row justify-content-start">
+            <div class="col-3 user-profilepic-rating"
+              style="background-image:url('<%=rating.author.profilePic.url   %>')"></div>
+            <div class="col-6 user-rating row">
+              <div class="col-12 user-rating-username"><a href="/user/<%=rating.author._id  %>"><%= rating.author.username  %></a> </div>
+              <div class="col-12 user-ratings-stars">
+                <p class="starability-result" data-rating="<%= rating.rating  %>">
+                  Rated: <%= rating.rating  %> stars
+                </p>
+              </div>
             </div>
-            <div class="card-text mb-3">
-              <%= rating.body  %>
-            </div>
-            <% if(currentUser && rating.author.equals(currentUser._id)){ %>
-            <form action="/projects/<%= project._id%>/rating/<%=rating._id %>?_method=DELETE" method="POST">
-              <button class="btn btn-sm btn-danger">Delete</button></form>
-            <% } %>
           </div>
+          <div class="card-body">
+            <div class="card-text mb-3"><%= rating.body  %></div>
+            <% if(currentUser && rating.author.equals(currentUser._id)){ %>
+              <form action="/projects/<%= project._id%>/rating/<%=rating._id %>?_method=DELETE" method="POST">
+                <button class="btn btn-sm btn-danger">Delete</button></form>
+              <% } %>
+          </div>
+          
         </div>
       </div>
       <% } %>

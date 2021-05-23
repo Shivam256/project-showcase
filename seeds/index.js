@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Project = require('../models/project');
+const User = require('../models/user');
 
 mongoose.connect('mongodb://localhost:27017/project-showcase', {
     useNewUrlParser: true,
@@ -54,14 +55,20 @@ const tempData2 = [
 ]
 
 
-const seedDB = async(arr) =>{
-  await Project.deleteMany({});
-  for(let elem of arr){
-    const project = new Project(elem)
-    await project.save();
-  }
+// const seedDB = async(arr) =>{
+//   await Project.deleteMany({});
+//   for(let elem of arr){
+//     const project = new Project(elem)
+//     await project.save();
+//   }
+// }
+
+
+const seedDB = async(id) => {
+  const user = await User.findById(id);
+  user.activity.collabRequests.splice(0,collabRequests.length);
 }
 
-seedDB(tempData2).then(()=>{
+seedDB('60a8b1d841b2dd7dbcca6d15').then(()=>{
   mongoose.connection.close();
 })

@@ -1,0 +1,17 @@
+.profile-pic-section{
+  min-height: 25vh;
+  /* background-color: aliceblue; */
+}
+
+
+.profile-pic-container{
+  min-height: 20vh;
+  max-height: 20vh;
+  width: 20vh;
+  border-radius: 100%;
+  background-color: gray;
+  margin: 2.5vh auto;
+  background-image: url("https://nwsid.net/wp-content/uploads/2015/05/dummy-profile-pic.png");
+  background-position: center;
+  background-size: cover;
+}

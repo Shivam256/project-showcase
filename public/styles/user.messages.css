@@ -1,0 +1,96 @@
+.main-section{
+  background-color: rgb(255, 255, 255);
+  min-height: 80vh;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+.users-section{
+  min-height: 80vh;
+  background-color: rgb(255, 255, 255);
+  border-right: 3px solid #4cc9f0;
+  text-align: center;
+}
+
+input.user-search{
+  width: 80%;
+  margin: 1em auto;
+  height: 6vh;
+  border: 2px solid #4cc9f0;
+  background-color: white;
+  border-radius: 10px;
+  text-align: center;
+  color: #4cc9f0;
+}
+
+input:focus{
+  outline: none;
+}
+
+.user-friend{
+  min-height: 8vh;
+  /* background-color: red; */
+  padding: 0.5em 0;
+  margin: 0.5em auto;
+  width: 90%;
+  border-bottom: 0.5px solid #4cc9f0;
+  
+}
+
+.user-friend-pic{
+  min-height: 8vh;
+  width: 8vh;
+  border-radius: 100%;
+  background-color: gray;
+  background-position: center;
+  background-size: cover;
+}
+
+.user-friend-main{
+  width: 80%;
+  
+}
+.user-friend-main .user-friend-username{
+  text-align: start;
+  font-weight: 500;
+  font-size: 1.2em;
+  margin-bottom: 0.2em;
+}
+.user-friend-main .user-friend-lastmsg{
+  text-align: start;
+  font-weight: 400;
+}
+
+.message-section{
+  min-height: 80vh;
+  /* background-color: pink; */
+  border-left: 3px solid #4cc9f0;
+}
+
+.messege-area{
+  min-height: 70vh;
+  max-height: 70vh;
+  background-color: rgb(211, 211, 211);
+  
+}
+.message-input-section{
+  min-height: 10vh;
+  max-height: 10vh;
+  width: 100%;
+  /* background-color: pink; */
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+#message-input{
+  width: 80%;
+  height: 7vh;
+  border-radius: 10px;
+  border: 2px solid #4cc9f0;
+  /* margin: 1em 0 1em 0.5em; */
+}
+
+.message-input-section button{
+  width: 15%;
+  height: 7vh;
+  font-size: 1.2em;
+}

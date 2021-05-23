@@ -1,7 +1,32 @@
+.home-screen{
+  width: 80%;
+  margin: 1em auto;
+}
+
+.project-container{
+  /* background-color: red; */
+  padding: 0em 1em 1em 1em;
+  max-height: 80vh;
+  overflow-y: scroll;
+}
+
+.project-container::-webkit-scrollbar{
+  display: none;
+}
+
+.project{
+  width: 80%;
+  margin: 0 auto;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
 .project-user-section{
   width: 100%;
   min-height: 7vh;
   padding: 0.5em;
+}
+
+.project-user-section a{
+  color: black;
 }
 
 .profilepic-project-card{
@@ -13,13 +38,49 @@
   margin-left: 20%;
   background-position: center;
   background-size: cover;
-  
 }
 
 .username-project-card{
   min-height: 100%;
   max-height: 7vh;
   /* background-color: aliceblue; */
-  padding: 1em 0;
+  padding: 0.6em 0;
   font-weight: 600;
+  
 }
+
+.collab-suggestions{
+  padding: 0.5em 1em;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+a{
+  text-decoration: none;
+}
+
+.suggested-user-pic{
+  width: 4vh;
+  min-height: 4vh;
+  border-radius: 100%;
+  background-position: center;
+  background-size: cover;
+}
+
+.suggested-user{
+  min-height: 6vh;
+  border: 1px solid rgb(6, 136, 243);
+  border-radius: 5px;
+  /* border-bottom: 1px solid black; */
+  margin: 1em auto;
+  padding: 0.5em 0.2em;
+}
+
+.suggested-user-username a{
+  color: black;
+  font-weight: 400;
+}
+
+.suggested-user-collab-btn button{
+  width: 100%;
+}
+
+ 

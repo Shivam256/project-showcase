@@ -49,8 +49,8 @@ module.exports.isProjectAuthor = async(req,res,next)=>{
 }
 
 module.exports.isRatingtAuthor = async(req,res,next)=>{
-  const {id} = req.params;
-  const rating = await Rating.findById(id);
+  const {ratingId} = req.params;
+  const rating = await Rating.findById(ratingId);
   if(!rating.author.equals(req.user._id)){
     req.flash('error','YOU DONT HAVE THE PERMISSION TO DO THAT!');
     return res.redirect(`/projects/${id}`);

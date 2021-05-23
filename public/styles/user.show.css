@@ -1,0 +1,135 @@
+.user-info{
+  /* min-height: 40vh; */
+  height: fit-content;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  width: 60%;
+  margin: 1em auto;
+  padding: 2em;
+  /* border: 0.5px solid gray;
+  border-radius: 10px; */
+}
+.user-profile-pic{
+  min-height: 25vh;
+  max-height: 25vh;
+  width: 25vh;
+  border-radius: 100%;
+  background-color: gray;
+  background-position: center;
+  background-size: cover;
+}
+
+.user-dashboard{
+  font-size: 1.2em;
+  font-weight: 500;
+}
+.project-count{
+  margin-right: 0.5em;
+}
+.friend-count{
+  margin-left:0.5em
+}
+
+.collab-btn{
+  width: fit-content;
+  height: fit-content;
+  padding: 0.1em 0.5em;
+  border-radius: 5px;
+  background-color: rgb(0, 110, 255);
+  color: white;
+  cursor: pointer;
+  margin-left: 1em;
+  font-weight: 400;
+}
+
+.user-projects{
+  width: 90%;
+  min-height: 50vh;
+  margin: 2em auto;
+  /* background-color: red; */
+}
+
+.project-type-section{
+  width: 100%;
+  margin: 0 auto;
+  min-height: 6vh;
+  /* background-color: yellow; */
+}
+
+.project-type{
+  text-align: center;
+  padding: 0.5em 0;
+  font-size: large;
+  width: 100%;
+  /* box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px; */
+  border: 1px solid rgb(27, 194, 206);
+  color: rgb(27, 194, 206);
+  /* background-color: pink; */
+}
+
+.sec-active{
+  background-color: rgb(27, 194, 206);
+  color: white;
+}
+
+.project-sec{
+  /* border-right: 0.5px solid black; */
+}
+.collab-sec{
+  /* border-left: 0.5px solid black; */
+}
+.main-project-container{
+  max-height: 40vh;
+  overflow: hidden;
+}
+
+.profile-project-container{
+  min-height: 40vh;
+  background-position: center;
+  background-size: cover;
+  padding-top: 3em;
+}
+
+.project-outer-container{
+  position: relative;
+  visibility: hidden;
+  min-height: 40vh;
+  top: -40vh;
+}
+
+.project-name{
+  text-align: center;
+  width: fit-content;
+  color: white;
+  /* background-color: rgba(255, 255, 255, 0.301); */
+  margin: 0 auto;
+  padding: 0.5em;
+}
+.profile-project-container h3{
+  font-size: 2.2em;
+}
+
+.project-stars{
+  width: fit-content;
+  color: rgba(255, 255, 255, 0.527);
+  margin: 0em auto;
+  font-size: 3.5em;
+}
+a{
+  text-decoration: none;
+}
+
+.project-explore-btn{
+  /* background-color: rgb(255, 255, 255,0.459); */
+  width: fit-content;
+  padding: 0.2em 1em;
+  color: white;
+  font-size: 1.5em;
+  margin: 1.5em auto 1em auto;
+  font-weight: 600;
+  border: 2px solid white;
+  cursor: pointer;
+  
+}
+.project-explore-btn:hover{
+  background-color: rgba(255, 255, 255, 0.267);
+}

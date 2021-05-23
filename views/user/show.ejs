@@ -1,0 +1,68 @@
+<% layout('layouts/boilerplate') -%>
+<%- include('../partials/functions.ejs')  %>
+<link rel="stylesheet" href="/styles/user.show.css">
+
+
+<section class="user-info">
+  <div class="row">
+    <div class="col-4">
+      <div class="user-profile-pic"
+        style="background-image: url('<%=user.profilePic.url%>');">
+      </div>
+    </div>
+    <div class="col-8">
+      <div class="user-profile-info">
+        <h3><%= user.username  %> </h3>
+        <p class="starability-result" data-rating="<%= calculateUserRating(user)  %>">
+          Rated: <%= calculateUserRating(user)  %> stars
+        </p>
+        <div class="user-dashboard mb-2">
+          <span class="project-count"><%= user.projects.length  %> Projects </span>
+          <span class="friend-count"> <%= user.friends.length  %>  Friends </span>
+          
+        </div>
+        <% if(user.bio){ %>
+        <div class="user-bio">
+          <%= user.bio  %>
+        </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="user-projects">
+  <div class="project-type-section row justify-content-center mb-3">
+    <div class="col-6">
+      <div class="project-type project-sec sec-active">Projects</div>
+    </div>
+    <div class="col-6">
+      <div class="project-type collab-sec">Collaborations</div>
+    </div>
+  </div>
+  <div class="projects-container">
+    <div class="row">
+      <% for(let project of user.projects){ %>
+      <div class="col-4 main-project-container">
+        <div class="profile-project-container" style="background-image:url('<%= project.images[0].url %>')">
+        </div>
+        <div class="project-outer-container">
+          <div class="project-name">
+            <h3><%= project.title  %> </h3>
+          </div>
+          <div class="project-stars">
+            <% for(let i=0; i<calcProjectRating(project); i++){ %>
+            <span class="iconify" data-icon="ant-design:star-filled" data-inline="false"></span>
+            <% } %>
+          </div>
+          <a href="/projects/<%= project._id  %>">
+            <div class="project-explore-btn">VIEW</div>
+          </a>
+        </div>
+      </div>
+      <% } %>
+    </div>
+  </div>
+</section>
+
+<script src="/scripts/user.show.js"></script>

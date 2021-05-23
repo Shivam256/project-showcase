@@ -1,7 +1,20 @@
+.carousel-image{
+  min-height: 40vh;
+  max-height: 40vh;
+}
+
+
 .rating-section{
   /* border: 1px solid black; */
   padding: 1em;
   /* border-radius: 20px; */
+}
+.project-subinfo-container{
+  max-height: 80vh;
+  overflow-y: scroll;
+}
+.project-subinfo-container::-webkit-scrollbar{
+  display: none;
 }
 
 .link-section{
@@ -12,11 +25,23 @@
   padding: 1em;
 }
 
+.stacks-main-container{
+  max-height: 18vh;
+  overflow-x: scroll;
+  /* overflow: hidden; */
+}
+.stacks-main-container::-webkit-scrollbar{
+  display: none;
+}
+
 .stack-icon-container{
   text-align: center;
   padding: 1em 0;
-  margin: 1em 0;
+  margin: 1em 1em;
+  display: inline;
   border-radius: 10px;
+  height: fit-content;
+  width: fit-content;
 }
 .stack-container{
   width: 90%;
@@ -27,6 +52,52 @@
 }
 
 .stack-icon{
-  width: 7vh;
-  height: 7vh;
+  width: 8vh;
+  height: 8vh;
+}
+
+/* .rating-section{
+  max-height: 50vh;
+  overflow-y: scroll;
+}
+.rating-section::-webkit-scrollbar{
+  display: none;
+} */
+
+.rater-info{
+  width: 100%;
+  margin: 0 auto;
+  min-height: 6vh;
+  max-height: fit-content;
+  /* background-color: red; */
+}
+
+.user-profilepic-rating{
+  min-height: 6vh;
+  width: 6vh;
+  background-color: gray;
+  border-radius: 100%;
+  margin: 0.5em 0 0 0.5em;
+  background-position: center;
+  background-size: cover;
+
+}
+a{
+  text-decoration: none;
+}
+
+.user-name-rating {
+  min-height: 3vh;
+  max-height: 3vh;
+  background-color: pink;
+  float: left;
+}
+
+.user-ratings-stars{
+  max-height: 4vh;
+}
+
+.user-rating-username a{
+  color: black;
+  margin:0.3em 0 0 0.3em;
 }

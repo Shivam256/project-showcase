@@ -1,0 +1,33 @@
+.collab-user{
+  min-height: 6vh;
+  /* margin: 0 auto; */
+  /* background-color: red; */
+  border: 1px solid rgb(158, 158, 158);
+  padding: 0.5em 0;
+  border-radius: 10px;
+  margin: 1em;
+}
+
+.collab-user-pic{
+  min-height: 6vh;
+  width: 6vh;
+  background-color: yellow;
+  border-radius: 100%;
+  background-position: center;
+  background-size: cover;
+}
+
+.collab-user-username{
+  font-weight: 500;
+  font-size: 1.2em;
+  line-height: 6vh;
+}
+
+.collab-user-accept-btn{
+  line-height: 5vh;
+}
+
+
+.collab-user-accept-btn button{
+  padding: 0.3em 1.3em;
+}

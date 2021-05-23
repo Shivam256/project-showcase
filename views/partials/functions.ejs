@@ -11,4 +11,27 @@ calcProjectRating = function(project){
   return overallRating || 0;
 }
 
+calculateUserRating = function(user){
+  if(user.projects.length){
+    const projectRatings = [];
+    for(let project of user.projects){
+      projectRatings.push(calcProjectRating(project));
+    }
+
+    let t=0,n=0;
+    for(let r of projectRatings){
+      t+=r;
+      n++;
+    }
+
+    const overallUserRating = Math.round(t/n);
+    return overallUserRating
+  }
+  return 0;
+}
+
+checkCollabRequested = function(fromUser,toUser){
+  return toUser.activity.collabRequests.some((el) => (el.username == fromUser.username))
+}
+
 %> 

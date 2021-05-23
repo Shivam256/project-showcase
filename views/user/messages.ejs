@@ -1,0 +1,36 @@
+<% layout('layouts/boilerplate') -%>
+<link rel="stylesheet" href="/styles/user.messages.css">
+
+<div class="main-section">
+  <div class="row">
+    <div class="col-4">
+      <div class="users-section">
+        <input class="user-search" placeholder="Search Friends" type="text" name="" id="">
+        <div class="users-container">
+          <% for(let friend of user.friends){ %>
+            <div class="user-friend row">
+              <div class="col-3">
+                <div class="user-friend-pic" style="background-image: url('<%= friend.profilePic.url  %>');"></div>
+              </div>
+              <div class="col-9">
+                <div class="user-friend-main row">
+                  <div class="user-friend-username col-12"><%= friend.username  %></div>
+                  <div class="user-friend-lastmsg col-12"><span>This is a last message of..</span></div>
+                </div>
+              </div>
+            </div>
+          <% } %>    
+        </div>
+      </div>
+    </div>
+    <div class="col-8">
+      <div class="message-section">
+        <div class="messege-area"></div>
+        <div class="message-input-section">
+          <input  id="message-input" type="text">
+          <button class="btn btn-primary">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

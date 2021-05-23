@@ -32,8 +32,15 @@ const upload = multer({
   storage
 });
 const {
-  stackList,getStackByName
+  stackList,
+  getStackByName
 } = require('./public/scripts/stack-list');
+const {
+  getCollabSuggestions,
+  checkCollabRequested,
+  checkCollabRequested2
+} = require('./utils/collabSuggestions');
+const user = require('./models/user');
 
 
 mongoose.connect('mongodb://localhost:27017/project-showcase', {
@@ -95,16 +102,40 @@ app.get('/', (req, res) => {
 
 app.get('/projects', catchAsync(async (req, res) => {
   const projects = await Project.find({}).populate('ratings').populate('author');
+  if (req.isAuthenticated()) {
+    const user = await User.findById(req.user._id).populate({
+      path: 'projects',
+      populate: {
+        path: 'ratings'
+      }
+    }).populate('friends');
+
+    const allUsers = await User.find({}).populate({
+      path: 'projects',
+      populate: {
+        path: 'ratings'
+      }
+    }).populate('friends').populate('activity.collabRequests');
+
+    const collabList = getCollabSuggestions(user, allUsers);
+    return res.render('projects/index', {
+      projects,
+      collabList
+    })
+  }
   res.render('projects/index', {
     projects
   });
 }))
 
 app.get('/projects/new', isLoggedIn, (req, res) => {
-  res.render('projects/new',{stackList});
+  res.render('projects/new', {
+    stackList
+  });
 })
 
 app.post('/projects', isLoggedIn, upload.array('image'), catchAsync(async (req, res) => {
+  const user = await User.findById(req.user._id);
   const project = new Project(req.body.project);
   project.author = req.user._id;
   project.links = req.body.links;
@@ -113,7 +144,9 @@ app.post('/projects', isLoggedIn, upload.array('image'), catchAsync(async (req, 
     url: f.path,
     filename: f.filename
   }));
+  user.projects.push(project);
   await project.save();
+  await user.save();
   req.flash('success', 'Successfully posted your project');
   res.redirect(`/projects/${project._id}`);
 }))
@@ -130,7 +163,7 @@ app.get('/projects/:id', catchAsync(async (req, res) => {
       path: 'author'
     }
   }).populate('author');
-  console.log(project);
+  // console.log(project);
   res.render('projects/show', {
     project
   })
@@ -200,7 +233,7 @@ app.delete('/projects/:id/rating/:ratingId', isLoggedIn, isRatingtAuthor, catchA
     }
   });
 
-  req.flash('success', 'Successfully deleted the campground');
+  req.flash('success', 'Successfully deleted the review');
   res.redirect(`/projects/${id}`);
 
 }))
@@ -211,18 +244,31 @@ app.get('/register', (req, res) => {
   res.render('user/register');
 })
 
-app.post('/register', catchAsync(async (req, res) => {
+app.post('/register', upload.single('profilePic'), catchAsync(async (req, res) => {
   try {
     const {
       username,
       email,
-      password
+      password,
+      bio
     } = req.body;
     const user = new User({
       username,
-      email
+      email,
+      bio
     });
+    const {
+      path,
+      filename
+    } = req.file;
+    const profPic = {
+      url: path || "https://www.cornwallbusinessawards.co.uk/wp-content/uploads/2017/11/dummy450x450.jpg",
+      filename: filename || null
+    };
+
+    user.profilePic = profPic;
     const registeredUser = await User.register(user, password);
+    await user.save();
     req.login(registeredUser, err => {
       if (err) {
         return next(err);
@@ -255,6 +301,115 @@ app.get('/logout', (req, res) => {
   req.flash('success', 'GOODBYE!');
   res.redirect('/projects');
 })
+
+app.get('/user/:id', isLoggedIn, catchAsync(async (req, res) => {
+  const {
+    id
+  } = req.params;
+  const user = await User.findById(id).populate({
+    path: 'projects',
+    populate: {
+      path: 'ratings'
+    }
+  });
+  res.render('user/show', {
+    user
+  });
+}))
+
+
+app.get('/user/:id/activity',isLoggedIn, catchAsync(async (req, res) => {
+  const {
+    id
+  } = req.params;
+  const user = await User.findById(id).populate({
+    path: 'projects',
+    populate: {
+      path: 'ratings'
+    }
+  }).populate('friends').populate('activity.collabRequests');
+  res.render('user/activity', {
+    user
+  });
+}))
+
+app.post('/user/:fromUserId/collab/:toUserId', isLoggedIn, catchAsync(async (req, res) => {
+  const {
+    fromUserId,
+    toUserId
+  } = req.params;
+  const toUser = await User.findById(toUserId);
+  const fromUser = await User.findById(fromUserId);
+  if (checkCollabRequested2(fromUser, toUser)) {
+    const idx = toUser.activity.collabRequests.findIndex(a => a.equals(fromUser._id));
+    toUser.activity.collabRequests.splice(idx, 1);
+    await toUser.save();
+    const idx2 = fromUser.activity.collabRequested.findIndex(a => a.equals(toUser._id));
+    fromUser.activity.collabRequested.splice(idx2, 1);
+    await fromUser.save();
+
+    // console.log('YIPIIEEE')
+  } else {
+    toUser.activity.collabRequests.push(fromUser);
+    fromUser.activity.collabRequested.push(toUser);
+  }
+  await toUser.save();
+  await fromUser.save();
+  console.log(req.originalUrl);
+  const currentUrl = req.originalUrl;
+  res.redirect('/projects');
+}));
+
+
+app.post('/user/:fromUserId/collab/:toUserId/:requestStatus', isLoggedIn, catchAsync(async (req, res) => {
+  const {
+    fromUserId,
+    toUserId,
+    requestStatus
+  } = req.params;
+  const toUser = await User.findById(toUserId);
+  const fromUser = await User.findById(fromUserId);
+
+  if (requestStatus == 'accepted') {
+
+    const idx = toUser.activity.collabRequests.findIndex(a => a.equals(fromUser._id));
+    toUser.activity.collabRequests.splice(idx, 1);
+    const idx2 = fromUser.activity.collabRequested.findIndex(a => a.equals(toUser._id));
+    fromUser.activity.collabRequested.splice(idx2, 1);
+
+    toUser.friends.push(fromUser);
+    fromUser.friends.push(toUser);
+
+    await toUser.save();
+    await fromUser.save();
+
+    return res.redirect(`/user/${toUserId}/activity`);
+  } else if (requestStatus == 'rejected') {
+    const idx = toUser.activity.collabRequests.findIndex(a => a.equals(fromUser._id));
+    toUser.activity.collabRequests.splice(idx, 1);
+    const idx2 = fromUser.activity.collabRequested.findIndex(a => a.equals(toUser._id));
+    fromUser.activity.collabRequested.splice(idx2, 1);
+
+    await toUser.save();
+    await fromUser.save();
+
+    return res.redirect(`/user/${toUserId}/activity`);
+  }
+}))
+
+
+app.get('/user/:id/messages',isLoggedIn,catchAsync(async(req,res)=>{
+  const {id} = req.params;
+  const user = await User.findById(id).populate({
+    path: 'projects',
+    populate: {
+      path: 'ratings'
+    }
+  }).populate('friends');
+
+  res.render('user/messages',{user});
+}))
+
 
 
 app.all('*', (req, res, next) => {
