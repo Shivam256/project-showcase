@@ -3,13 +3,19 @@ if (process.NODE_ENV !== "production") {
 }
 
 const express = require('express');
+const socket = require('socket.io');
 const app = express();
+const httpServer = require('http').createServer(app);
+const io = socket(httpServer);
+
 const path = require('path');
 const mongoose = require('mongoose');
 const ejsMate = require('ejs-mate');
 const Project = require('./models/project');
 const Rating = require('./models/rating');
 const User = require('./models/user');
+const Message = require('./models/messages');
+const MessageBox = require('./models/messageBox')
 const methodOverride = require('method-override');
 const ExpressError = require('./utils/ExpressError');
 const catchAsync = require('./utils/catchAsync');
@@ -41,6 +47,7 @@ const {
   checkCollabRequested2
 } = require('./utils/collabSuggestions');
 const user = require('./models/user');
+const {createMessages} = require('./utils/createMessages');
 
 
 mongoose.connect('mongodb://localhost:27017/project-showcase', {
@@ -179,7 +186,7 @@ app.get('/projects/:id/edit', isLoggedIn, catchAsync(async (req, res) => {
     return res.redirect('/projects');
   }
   res.render('projects/edit', {
-    project
+    project,stackList
   });
 }))
 
@@ -216,6 +223,14 @@ app.post('/projects/:id/rating', isLoggedIn, validateRating, catchAsync(async (r
   rating.author = req.user._id;
   await rating.save();
   await project.save();
+  
+  //updating the user activity page
+  const projectOwner = await User.findById(project.author);
+  projectOwner.activity.projectRatings.push({project,rating});
+
+  await projectOwner.save();
+  console.log(projectOwner);
+
   res.redirect(`/projects/${id}`);
 }))
 
@@ -311,7 +326,7 @@ app.get('/user/:id', isLoggedIn, catchAsync(async (req, res) => {
     populate: {
       path: 'ratings'
     }
-  });
+  }).populate('friends');
   res.render('user/show', {
     user
   });
@@ -327,7 +342,20 @@ app.get('/user/:id/activity',isLoggedIn, catchAsync(async (req, res) => {
     populate: {
       path: 'ratings'
     }
-  }).populate('friends').populate('activity.collabRequests');
+  }).populate('friends').populate('activity.collabRequests').populate({
+    path:'activity.projectRatings',
+    populate:{
+      path:'project'
+    }
+  }).populate({
+    path:'activity.projectRatings',
+    populate:{
+      path:'rating',
+      populate:{
+        path:'author'
+      }
+    }
+  });
   res.render('user/activity', {
     user
   });
@@ -397,6 +425,21 @@ app.post('/user/:fromUserId/collab/:toUserId/:requestStatus', isLoggedIn, catchA
   }
 }))
 
+app.delete('/user/:fromUserId/collab/:toUserId',isLoggedIn,catchAsync(async(req,res)=>{
+  const {
+    fromUserId,
+    toUserId
+  } = req.params;
+  const toUser = await  User.findById(toUserId).populate('friends');
+  const fromUser = await User.findById(fromUserId).populate('friends');
+  toUser.friends = toUser.friends.filter(e => !e.equals(fromUser._id));
+  fromUser.friends = fromUser.friends.filter(e => !e.equals(toUser._id));
+  await toUser.save();
+  await fromUser.save();
+
+  res.redirect(`/user/${toUserId}`);
+}))
+
 
 app.get('/user/:id/messages',isLoggedIn,catchAsync(async(req,res)=>{
   const {id} = req.params;
@@ -409,6 +452,45 @@ app.get('/user/:id/messages',isLoggedIn,catchAsync(async(req,res)=>{
 
   res.render('user/messages',{user});
 }))
+
+app.get('/user/:currUser/messages/:currFriend',catchAsync(async (req,re)=>{
+  const {currUser,currFriend} = req.params;
+  const messageBox = await MessageBox.findOne({$or:[{user1:currUser,user2:currFriend},{user1:currFriend,user2:currUser}]}).populate('messages');
+
+  res.send(messageBox);
+
+}))
+
+app.post('/user/:currUser/messages/:currFriend',catchAsync(async (req,res)=>{
+  const {currUser,currFriend} = req.params;
+  const {message} = req.body;
+  console.log('IN THE POST ROUTE!!');
+  createMessages(currUser,currFriend,message);
+  res.sendStatus(200);
+}))
+
+
+io.on('connection',(socket)=>{
+  console.log('SOCKET CONNECTED!');
+  socket.on('chat-message',async (currUser,currFriend,msg)=>{
+    console.log(`from ${currUser} to ${currFriend} message is ${msg}`);
+    
+    // if(createMessages(currUser,currFriend,msg)){
+    //   console.log('TRUEEEE');
+    // }
+    // else{
+    //   console.log('FALSEEEE');
+    //   console.log(createMessages(currUser,currFriend,msg));
+    // }
+    // socket.broadcast.emit("received", { message: msg  });
+    // createMessages(currUser,currFriend,msg);
+
+    // const messageBox = await MessageBox.findOne({$or:[{user1:currUser,user2:currFriend},{user1:currFriend,user2:currUser}]}).populate('messages');
+
+    // socket.emit('messages-list',messageBox);
+    
+  })
+})
 
 
 
@@ -430,8 +512,10 @@ app.use((err, req, res, next) => {
 })
 
 
-const port = process.env.PORT || 3000
 
-app.listen(port, () => {
+const PORT = process.env.PORT || 3000
+
+httpServer.listen(PORT, () => {
   console.log('SERVER STARTED ON PORT 3000');
 })
+

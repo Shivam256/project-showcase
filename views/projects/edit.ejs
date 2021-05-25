@@ -1,26 +1,93 @@
 <% layout('layouts/boilerplate') -%>
-<h1 >Edit project</h1>
+<%- include('../partials/functions.ejs')  %> 
+<link rel="stylesheet" href="/styles/projects.new.css">
+
 
 <div class="row">
-  <div class="col-6 offset-3">
-    <form action="/projects/<%= project._id %>?_method=PUT" method="POST" novalidate class="validated-form">
-      <div class="mb-3">
-        <label for="title" class="form-label">Project Title:</label>
-        <input type="text" name="project[title]" class="form-control" id="title" value="<%= project.title %>" required>
-        <div class="valid-feedback">Looks good!</div>
+  <div class="col-8 offset-2">
+    <div class="card">
+      <div class="card-body">
+        <h2 class="card-title">Edit project</h2>
+        <form action="/projects" method="POST" novalidate class="validated-form" enctype="multipart/form-data">
+          <div class="mb-3">
+            <label for="title" class="form-label">Project Title:</label>
+            <input type="text" name="project[title]" class="form-control" id="title" value="<%= project.title  %>" required>
+            <div class="valid-feedback">Looks good!</div>
+          </div>
+          <div class="mb-3">
+            <label for="description" class="form-label">Project Description:</label>
+            <textarea name="project[description]" class="form-control" id="description" cols="30" rows="4" required><%=project.description  %> </textarea>
+            <div class="valid-feedback">Looks good!</div>
+          </div>
+          <div class="mb-3">
+            <label for="githubLink" class="form-label">Github Repo(optional):</label>
+            <input type="text" name="links[githubLink]" class="form-control" id="githubLink" value="<%= project.links.githubLink?project.links.githubLink:''  %>">
+            <div class="valid-feedback">Looks good!</div>
+          </div>
+          <div class="mb-3">
+            <label for="hostedLink" class="form-label">Hosted Link(optional):</label>
+            <input type="text" name="links[hostedLink]" class="form-control" id="hostedLink" value="<%= project.links.hostedLink?project.links.hostedLink:''  %>">
+            <div class="valid-feedback">Looks good!</div>
+          </div>
+          <div class="mb-3">
+            <p>
+              <button class="btn btn-outline-primary " type="button" data-bs-toggle="collapse" data-bs-target="#stacks-list"
+                aria-expanded="false" aria-controls="stacks-list">
+                Choose Stack
+              </button>
+            </p>
+            <div class="collapse" id="stacks-list">
+              <div class="card card-body">
+                <div class="row justify-content-evenly stack-container">
+                  <% for(let stack of stackList){ %>
+                  <div class="col-3">
+                    <div class="stack-icon-container">
+                      <span class="iconify stack-icon" data-icon="<%= stack.dataIcon  %>" data-inline="false"></span>
+                      <p class="stack-name"><%= stack.name %></p>
+                    </div>
+                  </div>
+                  <% } %>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="input-group mb-3">
+            <input type="file" class="form-control" id="inputGroupFile02" name="image" multiple required>
+            <label class="input-group-text" for="inputGroupFile02">Add Screenshots</label>
+          </div>
+          <div class="hidden-inputs"></div>
+          <div class="input-group mb-3">
+            <p>
+              <button class="btn btn-outline-primary " type="button" data-bs-toggle="collapse" data-bs-target="#images-delete"
+                aria-expanded="false" aria-controls="images-delete">
+                Delete images
+              </button>
+            </p>
+            <div class="collapse" id="images-delete">
+              <div class="card card-body">
+                <div class="row justify-content-evenly stack-container">
+                  <% for(let stack of stackList){ %>
+                  <div class="col-3">
+                    <div class="stack-icon-container">
+                      <span class="iconify stack-icon" data-icon="<%= stack.dataIcon  %>" data-inline="false"></span>
+                      <p class="stack-name"><%= stack.name %></p>
+                    </div>
+                  </div>
+                  <% } %>
+                </div>
+              </div>
+            </div>
+
+          </div>
+         
+        
+          <button class="btn btn-success">Create Project</button>
+        </form>
       </div>
-      <div class="mb-3">
-        <label for="description" class="form-label">Project Description:</label>
-        <textarea name="project[description]" class="form-control" id="description" cols="30" rows="4" required><%= project.description  %></textarea>
-        <div class="valid-feedback">Looks good!</div>
-      </div>
-      <div class="mb-3">
-        <label for="image" class="form-label">Project Image Url:</label>
-        <input type="text" name="project[image]" class="form-control" id="image" value="<%= project.image  %>" required>
-        <div class="valid-feedback">Looks good!</div>
-      </div>
-    
-      <button class="btn btn-success">Edit Project</button>
-    </form>
+    </div>
   </div>
 </div>
+
+
+
+<script src="/scripts/projects.new.js"></script>

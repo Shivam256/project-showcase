@@ -6,8 +6,7 @@
 <section class="user-info">
   <div class="row">
     <div class="col-4">
-      <div class="user-profile-pic"
-        style="background-image: url('<%=user.profilePic.url%>');">
+      <div class="user-profile-pic" style="background-image: url('<%=user.profilePic.url%>');">
       </div>
     </div>
     <div class="col-8">
@@ -18,8 +17,27 @@
         </p>
         <div class="user-dashboard mb-2">
           <span class="project-count"><%= user.projects.length  %> Projects </span>
-          <span class="friend-count"> <%= user.friends.length  %>  Friends </span>
-          
+          <span class="friend-count"><a data-bs-toggle="offcanvas" href="#offcanvasExample" role="button"
+              data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">
+              <%= user.friends.length  %> Friends
+            </a>
+          </span>
+          <% if(user.equals(currentUser._id)){ %>
+          <span class="edit-user">Edit Profile</span>
+          <% }else if(checkFriends(currentUser,user)){ %>
+          <button class="btn btn-sm btn-outline-primary msg-btn">message</button>
+          <form action="/user/<%= currentUser._id%>/collab/<%= user._id  %>?_method=DELETE" method="POST" class="d-inline">
+            <button class="btn btn-sm btn-outline-danger unfriend-btn">unfriend</button>
+          </form>
+          <% }else{ %>
+          <form action="user/<%= currentUser._id %>/collab/<%= user._id  %>" method="POST" class="d-inline">
+            <% if(checkIfRequested(currentUser,user)){ %>
+            <button class="btn btn-sm btn-primary">requested</button>
+            <% }else{ %>
+            <button class="btn btn-sm btn-outline-primary">collab</button>
+            <% } %>
+          </form>
+          <% } %>
         </div>
         <% if(user.bio){ %>
         <div class="user-bio">
@@ -30,6 +48,53 @@
     </div>
   </div>
 </section>
+
+<div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions"
+  aria-labelledby="offcanvasWithBothOptionsLabel">
+  <div class="offcanvas-header">
+    <h3 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">Friends:</h3>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <% if(user.equals(currentUser._id)){ %>
+    <% for(let friend of user.friends){ %>
+
+    <div class="user-friend-card row">
+      <div class="col-2 user-friend-card-pic" style="background-image: url('<%= friend.profilePic.url  %>');"></div>
+      <div class="col-4 user-friend-card-username"><%= friend.username  %></div>
+      <div class="col-3 user-friend-card-message user-fc-btn"><a href=""
+          class="btn btn-sm btn-outline-primary">message</a></div>
+      <div class="col-3 user-friend-card-unfriend user-fc-btn"><a href=""
+          class="btn btn-sm btn-outline-danger">unfriend</a></div>
+    </div>
+    <% } %>
+    <% }else{ %>
+    <% for(let friend of user.friends){ %>
+    <div class="user-friend-card-2 row">
+      <div class="col-2 user-friend-card-pic" style="background-image: url('<%= friend.profilePic.url  %>');"></div>
+      <div class="col-4 user-friend-card-username"><%= friend.username  %></div>
+      <% if(checkFriends(currentUser,friend)){ %>
+      <div class="col-3 user-friend-card-message user-fc-btn"><a href=""
+          class="btn btn-sm btn-outline-primary">message</a></div>
+      <div class="col-3 user-friend-card-unfriend user-fc-btn"><a href=""
+          class="btn btn-sm btn-outline-danger">unfriend</a></div>
+
+      <% }else{ %>
+      <form action="user/<%= currentUser._id %>/collab/<%= user._id  %>" method="POST"
+        class="d-inline col-3 offcanvas-form">
+        <% if(checkIfRequested(currentUser,friend)){ %>
+        <button class="btn btn-sm btn-primary">requested</button>
+        <% }else{ %>
+        <button class="btn btn-sm btn-outline-primary">collab</button>
+        <% } %>
+      </form>
+      <% } %>
+    </div>
+    
+    <% } %>
+    <% } %>
+  </div>
+</div>
 
 <section class="user-projects">
   <div class="project-type-section row justify-content-center mb-3">

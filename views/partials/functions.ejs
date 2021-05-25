@@ -31,7 +31,24 @@ calculateUserRating = function(user){
 }
 
 checkCollabRequested = function(fromUser,toUser){
-  return toUser.activity.collabRequests.some((el) => (el.username == fromUser.username))
+  return toUser.activity.collabRequests.some((el) => (el.username == fromUser.username));
+}
+
+checkIfRequested = function(currentUser,profileUser){
+  return profileUser.activity.collabRequests.some(e => e.equals(currentUser._id));
+}
+
+checkFriends = function(currentUser,profileUser){
+  return profileUser.friends.some(el => el.equals(currentUser._id));
+}
+
+checkCurrentStack = function(stck, project){
+  for(let st of project.stack){
+    if(st.name == stck.name){
+      return true;
+    }
+  }
+  return false;
 }
 
 %> 

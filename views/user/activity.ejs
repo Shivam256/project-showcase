@@ -1,11 +1,42 @@
 <% layout('layouts/boilerplate') -%>
 <link rel="stylesheet" href="/styles/user.activity.css">
 
-<h1>Activity Page</h1>
+<% if((!user.activity.projectRatings.length)&&(!user.activity.collabRequests.length)){ %>
+  <div class="card">
+    <div class="card-body">
+      <h2 class="card-title">Your feed seems to be empty!</h2>
+      <div class="card-text">
+        Create projects to let users rate it and increase your stars!
+      </div>
+    </div>
+  </div>
+<% } %>    
+
+<!-- <h1>Activity Page</h1> -->
 <div class="row">
-  <div class="col-7"></div>
+  <% if(user.activity.projectRatings.length){ %> 
+  <div class="col-7">
+    <div class="card rate-activity-section">
+      <div class="card-body">
+        <h4 class="card-title">Activity</h4>
+        <% for(let rate of user.activity.projectRatings){ %> 
+          <div class="card mb-3">
+            <div class="card-body user-rating-feed">
+              <div class="card-text">
+                <a href="/user/<%= rate.rating.author._id  %>"><img src="<%= rate.rating.author.profilePic.url %>" class="rater-image" alt=""></a>
+                <a href="/user/<%= rate.rating.author._id  %>"><strong><%= rate.rating.author.username  %></strong></a> gave your project <a href="/projects/<%= rate.project._id  %>"><strong><%= rate.project.title  %></strong></a> a <strong><%= rate.rating.rating  %> star</strong> rating
+              </div>
+            </div>
+          </div>
+          
+        <% } %>   
+      </div>
+    </div>
+  </div>
+  <% } %> 
+  <% if(user.activity.collabRequests.length){ %> 
   <div class="col-5">
-    <div class="card">
+    <div class="card collab-activity-section">
       <div class="card-body">
         <h4 class="card-title">Collab Requests:</h4>
         <% for(let collabUser of user.activity.collabRequests){ %>
@@ -31,4 +62,5 @@
       </div>
     </div>
   </div>
+  <% } %> 
 </div>

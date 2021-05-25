@@ -57,8 +57,6 @@ const getCollabSuggestions = (user,allUsers) => {
   else{
     return topUsers;
   }
-
- 
   
 }
 
