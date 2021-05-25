@@ -1,6 +1,7 @@
 const iconContainers = document.querySelectorAll('.stack-icon-container');
 const hiddenInputContainer = document.querySelector('.hidden-inputs');
 
+
 // const addInps = () => {
 //   //removing the earlier children
 //   let inps = hiddenInputContainer.children;

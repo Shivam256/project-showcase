@@ -1,0 +1,23 @@
+.del-image-container{
+  min-height: 15vh;
+  width: 20vh;
+  background-position: center;
+  background-size: cover;
+}
+
+.del-image-container:hover{
+  filter: brightness(50%);
+  border:5px solid black;
+  box-sizing: border-box;
+}
+
+.del-img-container-selected{
+  min-height: 15vh;
+  width: 20vh;
+  background-position: center;
+  background-size: cover;
+  filter: brightness(50%);
+  border:5px solid black;
+  box-sizing: border-box;
+
+}

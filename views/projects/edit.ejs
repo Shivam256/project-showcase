@@ -1,6 +1,7 @@
 <% layout('layouts/boilerplate') -%>
 <%- include('../partials/functions.ejs')  %> 
 <link rel="stylesheet" href="/styles/projects.new.css">
+<link rel="stylesheet" href="/styles/projects.edit.css">
 
 
 <div class="row">
@@ -8,7 +9,7 @@
     <div class="card">
       <div class="card-body">
         <h2 class="card-title">Edit project</h2>
-        <form action="/projects" method="POST" novalidate class="validated-form" enctype="multipart/form-data">
+        <form action="/projects/<%= project._id  %>?_method=PUT" method="POST" novalidate class="validated-form" enctype="multipart/form-data">
           <div class="mb-3">
             <label for="title" class="form-label">Project Title:</label>
             <input type="text" name="project[title]" class="form-control" id="title" value="<%= project.title  %>" required>
@@ -52,11 +53,11 @@
             </div>
           </div>
           <div class="input-group mb-3">
-            <input type="file" class="form-control" id="inputGroupFile02" name="image" multiple required>
+            <input type="file" class="form-control" id="inputGroupFile02" name="image" multiple>
             <label class="input-group-text" for="inputGroupFile02">Add Screenshots</label>
           </div>
           <div class="hidden-inputs"></div>
-          <div class="input-group mb-3">
+          <div class="mb-3">
             <p>
               <button class="btn btn-outline-primary " type="button" data-bs-toggle="collapse" data-bs-target="#images-delete"
                 aria-expanded="false" aria-controls="images-delete">
@@ -66,14 +67,11 @@
             <div class="collapse" id="images-delete">
               <div class="card card-body">
                 <div class="row justify-content-evenly stack-container">
-                  <% for(let stack of stackList){ %>
+                  <% project.images.forEach((img,i)=>{ %>
                   <div class="col-3">
-                    <div class="stack-icon-container">
-                      <span class="iconify stack-icon" data-icon="<%= stack.dataIcon  %>" data-inline="false"></span>
-                      <p class="stack-name"><%= stack.name %></p>
-                    </div>
+                    <div class="del-image-container" style="background-image: url('<%= img.thumbnail  %> ');" data-img-filename="<%= img.filename  %>"></div>
                   </div>
-                  <% } %>
+                  <% }) %>
                 </div>
               </div>
             </div>
@@ -81,7 +79,7 @@
           </div>
          
         
-          <button class="btn btn-success">Create Project</button>
+          <button class="btn btn-success">Edit Project</button>
         </form>
       </div>
     </div>
@@ -90,4 +88,6 @@
 
 
 
-<script src="/scripts/projects.new.js"></script>
+<script src="/scripts/projects.edit.js"></script>
+
+

@@ -32,7 +32,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const multer = require('multer');
 const {
-  storage
+  storage, cloudinary
 } = require('./cloudinary/index');
 const upload = multer({
   storage
@@ -190,15 +190,35 @@ app.get('/projects/:id/edit', isLoggedIn, catchAsync(async (req, res) => {
   });
 }))
 
-app.put('/projects/:id', isLoggedIn, isProjectAuthor, catchAsync(async (req, res) => {
+app.put('/projects/:id', isLoggedIn, upload.array('image') ,isProjectAuthor, catchAsync(async (req, res) => {
   const {
     id
   } = req.params;
-  const project = await Project.findByIdAndUpdate(id, req.body.project, {
-    new: true
-  });
+  const project = await Project.findById(id);
+  project.title = req.body.project.title;
+  project.description = req.body.project.description;
+  project.links = req.body.links;
+  project.stack = getStackByName(req.body.stacks);
+  const imgs = req.files.map(f => ({
+    url: f.path,
+    filename: f.filename
+  }));
+  project.images.push(...imgs);
+
+  if(req.body.deleteImages){
+    for(let filename of req.body.deleteImages){
+      console.log(filename);
+      await cloudinary.uploader.destroy(filename);
+    }
+    await project.updateOne({$pull:{images:{filename:{$in:req.body.deleteImages}}}});
+  }
+  await project.save();
+  // const project = await Project.findByIdAndUpdate(id, req.body.project, {
+  //   new: true
+  // });
   req.flash('success', 'Successfully edited your project!');
   res.redirect(`/projects/${id}`);
+  
 }))
 
 app.delete('/projects/:id', isLoggedIn, isProjectAuthor, catchAsync(async (req, res) => {
