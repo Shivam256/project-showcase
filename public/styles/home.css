@@ -1,0 +1,109 @@
+body {
+  height: 100vh;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+  url("https://images.unsplash.com/photo-1571171637578-41bc2dd41cd2?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8c29mdHdhcmV8ZW58MHx8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.home-container{
+  width: 80%;
+  margin: 0 auto;
+  /* text-shadow: 0 0.05rem 0.1rem rgba(0, 0, 0, 0.5); */
+  box-shadow: inset 0 0 5rem rgba(0, 0, 0, 0.5);
+  position: absolute;
+}
+
+
+.home-text{
+  /* background-color: red; */
+  margin: 25vh 0;
+}
+
+.home-text h1{
+  font-size: 5em;
+  color:white;
+}
+
+.login-section{
+  margin: 15vh 0;
+}
+
+.login-form{
+  width: 80%;
+  background-color:rgba(255, 255, 255, 0.308);
+}
+.login-form label{
+  color: white;
+}
+.login-form input{
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid white;
+  width: 100%;
+  color: white;
+}
+
+.login-form input:enabled{
+  background-color: transparent;
+  border: none;
+  outline: none;
+  border-bottom: 1px solid white;
+}
+
+.login-text{
+  background-color: #7209b7;
+  background-image: -webkit-gradient(
+    linear,
+    left top,
+    right top,
+    color-stop(0, #7209b7),
+    color-stop(0.6, #b5179e),
+    color-stop(1, #b5179e)
+  );
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  /* color: #7109b7be; */
+  font-weight: 700;
+  font-size: 1.5em;
+}
+
+.login-btn{
+  
+  width: fit-content;
+  height: fit-content;
+  padding: 0.5em 1.5em;
+  color:white;
+  border: none;
+  margin: 1em auto;
+  transition: all 0.2s ease-in-out;
+  box-sizing: border-box;
+  /* border: 2px solid white; */
+  background: linear-gradient(90deg, #7209b7 0%, #b5179e 100%);
+
+
+}
+.login-btn:hover{
+  
+  width: fit-content;
+  height: fit-content;
+  padding: 0.5em 1.5em;
+  background: linear-gradient(90deg, #B5179E 0%, #F72585 100%);
+
+  /* background-color: #7109b7; */
+  color:white;
+  border: none;
+  margin: 1em auto;
+}
+
+.register-section{
+  width: 80%;
+  background-color:rgba(255, 255, 255, 0.308);
+  color: white;
+}
+.register-section a{
+  text-decoration: none;
+  color: white;
+}

@@ -1,0 +1,39 @@
+<% layout('layouts/boilerplate') -%>
+<link rel="stylesheet" href="/styles/user.register.css">
+
+
+<div class="row">
+  <div class="col-6 offset-3">
+    <div class="card shadow">
+      <div class="profile-pic-section">
+        <div class="profile-pic-container" style="background-image:url('<%= user.profilePic.url  %>');"></div>
+      </div>
+      <div class="card-body">
+        <h5 class="card-title">Register</h5>
+        <form action="/user/<%= user._id  %>?_method=PUT" method="POST" novalidate class="validated-form" enctype="multipart/form-data">
+          <div class="mb-3">
+            <label for="username" class="form-label">Username:</label>
+            <input type="text" name="username" class="form-control" id="username" value="<%= user.username  %> " required>
+            <div class="valid-feedback">Looks good!</div>
+          </div>
+          <div class="mb-3">
+            <label for="email" class="form-label">Email:</label>
+            <input type="email" name="email" class="form-control" id="email" value="<%= user.email  %>" required>
+            <div class="valid-feedback">Looks good!</div>
+          </div>
+          <div class="mb-4">
+            <label for="bio" class="form-label">Bio:(optional)</label>
+            <textarea name="bio" id="bio" class="form-control" cols="30" rows="3"><%= user.bio  %></textarea>
+            <div class="valid-feedback">Looks good!</div>
+          </div>
+          
+          <div class="input-group mb-3">
+            <input type="file" class="form-control" id="inputGroupFile02" name="profilePic">
+            <label class="input-group-text" for="inputGroupFile02">Change Profile Pic</label>
+          </div>
+          <button class="btn btn-success">Update</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

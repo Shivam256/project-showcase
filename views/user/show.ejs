@@ -23,18 +23,20 @@
             </a>
           </span>
           <% if(user.equals(currentUser._id)){ %>
-          <span class="edit-user">Edit Profile</span>
+          <!-- <form action="/user/<%= currentUser._id  %>/edit" class="d-inline">
+            <button id="edit-user" type="submit">Edit Profile</button>
+          </form> -->
           <% }else if(checkFriends(currentUser,user)){ %>
           <button class="btn btn-sm btn-outline-primary msg-btn">message</button>
           <form action="/user/<%= currentUser._id%>/collab/<%= user._id  %>?_method=DELETE" method="POST" class="d-inline">
             <button class="btn btn-sm btn-outline-danger unfriend-btn">unfriend</button>
           </form>
           <% }else{ %>
-          <form action="user/<%= currentUser._id %>/collab/<%= user._id  %>" method="POST" class="d-inline">
+          <form action="/user/<%= currentUser._id %>/collab/<%= user._id  %>" method="POST" class="d-inline">
             <% if(checkIfRequested(currentUser,user)){ %>
-            <button class="btn btn-sm btn-primary">requested</button>
+            <button class="index-collab-requested-btn">requested</button>
             <% }else{ %>
-            <button class="btn btn-sm btn-outline-primary">collab</button>
+            <button class="index-collab-btn">collab</button>
             <% } %>
           </form>
           <% } %>
@@ -83,9 +85,9 @@
       <form action="user/<%= currentUser._id %>/collab/<%= user._id  %>" method="POST"
         class="d-inline col-3 offcanvas-form">
         <% if(checkIfRequested(currentUser,friend)){ %>
-        <button class="btn btn-sm btn-primary">requested</button>
+        <button class="index-collab-requested-btn">requested</button>
         <% }else{ %>
-        <button class="btn btn-sm btn-outline-primary">collab</button>
+        <button class="index-collab-btn">collab</button>
         <% } %>
       </form>
       <% } %>
@@ -99,10 +101,7 @@
 <section class="user-projects">
   <div class="project-type-section row justify-content-center mb-3">
     <div class="col-6">
-      <div class="project-type project-sec sec-active">Projects</div>
-    </div>
-    <div class="col-6">
-      <div class="project-type collab-sec">Collaborations</div>
+      <div class="project-type project-sec">Projects</div>
     </div>
   </div>
   <div class="projects-container">

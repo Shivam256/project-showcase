@@ -13,3 +13,70 @@ body::-webkit-scrollbar{
   width: 100%;
 
 }
+
+.my-shadow{
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
+.my-outline-btn{
+  width: 100%;
+  padding: 0.5em 0.5em;
+  background-color: white;
+  color: #7209b7;
+  border: 1px solid #7209b7;
+  border-radius: 5px;
+ }
+ .my-outline-btn:hover{
+  
+  background-color: #7209b7;
+  color:white ;
+  border: 1px solid white;
+
+ }
+
+
+ .my-filled-btn{
+  width: fit-content;
+  padding: 0.5em 1.2em;
+  background-color: #7209b7;
+  color:white ;
+  border: 1px solid white;
+  border-radius: 5px;
+ }
+
+ .my-filled-gradient-btn{
+  width: fit-content;
+  padding: 0.5em 1.2em;
+  background: linear-gradient(90deg, #7209b7 0%, #b5179e 100%);
+  color:white ;
+  border: 1px solid white;
+  border-radius: 5px;
+
+ }
+
+ .index-collab-btn{
+  width: fit-content;
+  padding: 0.2em 0.3em;
+  background-color: white;
+  color: #7209b7;
+  border: 1px solid #7209b7;
+  border-radius: 5px;
+ }
+ .index-collab-btn:hover{
+  
+  background-color: #7209b7;
+  color:white ;
+  border: 1px solid white;
+
+ }
+
+ .index-collab-requested-btn{
+  width: fit-content;
+  padding: 0.2em 0.3em;
+  background-color: #7209b7;
+  color:white ;
+  border: 1px solid white;
+  border-radius: 5px;
+ }
+ 
+

@@ -29,7 +29,7 @@ module.exports.isLoggedIn = (req,res,next) => {
   if(!req.isAuthenticated()){
     req.session.returnLink = req.originalUrl;
     req.flash('error','YOU MUST BU SIGNED IN!');
-    res.redirect('/login');
+    res.redirect('/');
   }
   else{
     next();

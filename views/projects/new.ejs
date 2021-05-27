@@ -4,9 +4,9 @@
 
 <div class="row">
   <div class="col-8 offset-2">
-    <div class="card">
+    <div class="card post-project-section">
       <div class="card-body">
-        <h2 class="card-title">Post a project</h2>
+        <h2 class="card-title post-project-txt">Post a project</h2>
         <form action="/projects" method="POST" novalidate class="validated-form" enctype="multipart/form-data">
           <div class="mb-3">
             <label for="title" class="form-label">Project Title:</label>
@@ -30,7 +30,7 @@
           </div>
           <div class="mb-3">
             <p>
-              <button class="btn btn-outline-primary " type="button" data-bs-toggle="collapse" data-bs-target="#stacks-list"
+              <button class="choose-stack-btn" type="button" data-bs-toggle="collapse" data-bs-target="#stacks-list"
                 aria-expanded="false" aria-controls="stacks-list">
                 Choose Stack
               </button>
@@ -57,7 +57,7 @@
           <div class="hidden-inputs"></div>
          
         
-          <button class="btn btn-success">Create Project</button>
+          <button class="create-project-btn">Create Project</button>
         </form>
       </div>
     </div>

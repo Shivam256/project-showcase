@@ -32,20 +32,7 @@ a{
   margin-left:0.5em;
   cursor: pointer;
 }
-.edit-user{
-  font-size: 0.8em;
-  padding: 0.3em 0.7em;
-  /* background-color: red; */
-  margin-left: 1em;
-  border: 1px solid black;
-  border-radius: 5px;
-  cursor: pointer;
-}
-.edit-user:hover{
-  background-color: rgb(0, 110, 255); 
-  color: white;
-  border: 1px solid white;
-}
+
 
 .user-dashboard .msg-btn{
   margin-left: 1em;
@@ -90,23 +77,21 @@ a{
   padding: 0.5em 0;
   font-size: large;
   width: 100%;
-  /* box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px; */
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
   border: 1px solid rgb(27, 194, 206);
   color: rgb(27, 194, 206);
-  /* background-color: pink; */
-}
-
-.sec-active{
-  background-color: rgb(27, 194, 206);
-  color: white;
+  background-color: pink;
 }
 
 .project-sec{
-  /* border-right: 0.5px solid black; */
+  /* width: fit-content; */
+  padding: 0.5em 1.2em;
+  background: linear-gradient(90deg, #7209b7 0%, #b5179e 100%);
+  color:white ;
+  border: 1px solid white;
+  border-radius: 5px;
 }
-.collab-sec{
-  /* border-left: 0.5px solid black; */
-}
+
 .main-project-container{
   max-height: 40vh;
   overflow: hidden;
@@ -204,4 +189,22 @@ a{
 }
 .offcanvas-form{
   line-height: 7vh;
+}
+
+#edit-user{
+  font-size: 0.8em;
+  padding: 0.3em 0.7em;
+  width: fit-content;
+  /* background-color: red; */
+  display: inline;
+  margin-left: 1em;
+  border: 1px solid black;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: white;
+}
+#edit-user:hover{
+  background-color: rgb(0, 110, 255); 
+  color: white;
+  border: 1px solid white;
 }

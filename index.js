@@ -32,7 +32,8 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const multer = require('multer');
 const {
-  storage, cloudinary
+  storage,
+  cloudinary
 } = require('./cloudinary/index');
 const upload = multer({
   storage
@@ -47,7 +48,9 @@ const {
   checkCollabRequested2
 } = require('./utils/collabSuggestions');
 const user = require('./models/user');
-const {createMessages} = require('./utils/createMessages');
+const {
+  createMessages
+} = require('./utils/createMessages');
 
 
 mongoose.connect('mongodb://localhost:27017/project-showcase', {
@@ -94,7 +97,8 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-app.use((req, res, next) => {
+
+app.use((req, res, next)=>{
   res.locals.currentUser = req.user;
   res.locals.success = req.flash('success');
   res.locals.error = req.flash('error');
@@ -107,7 +111,7 @@ app.get('/', (req, res) => {
   res.render('home');
 })
 
-app.get('/projects', catchAsync(async (req, res) => {
+app.get('/projects',isLoggedIn,catchAsync(async (req, res) => {
   const projects = await Project.find({}).populate('ratings').populate('author');
   if (req.isAuthenticated()) {
     const user = await User.findById(req.user._id).populate({
@@ -160,7 +164,7 @@ app.post('/projects', isLoggedIn, upload.array('image'), catchAsync(async (req, 
 
 
 
-app.get('/projects/:id', catchAsync(async (req, res) => {
+app.get('/projects/:id',isLoggedIn,catchAsync(async (req, res) => {
   const {
     id
   } = req.params;
@@ -186,11 +190,12 @@ app.get('/projects/:id/edit', isLoggedIn, catchAsync(async (req, res) => {
     return res.redirect('/projects');
   }
   res.render('projects/edit', {
-    project,stackList
+    project,
+    stackList
   });
 }))
 
-app.put('/projects/:id', isLoggedIn, upload.array('image') ,isProjectAuthor, catchAsync(async (req, res) => {
+app.put('/projects/:id', isLoggedIn, upload.array('image'), isProjectAuthor, catchAsync(async (req, res) => {
   const {
     id
   } = req.params;
@@ -205,12 +210,20 @@ app.put('/projects/:id', isLoggedIn, upload.array('image') ,isProjectAuthor, cat
   }));
   project.images.push(...imgs);
 
-  if(req.body.deleteImages){
-    for(let filename of req.body.deleteImages){
+  if (req.body.deleteImages) {
+    for (let filename of req.body.deleteImages) {
       console.log(filename);
       await cloudinary.uploader.destroy(filename);
     }
-    await project.updateOne({$pull:{images:{filename:{$in:req.body.deleteImages}}}});
+    await project.updateOne({
+      $pull: {
+        images: {
+          filename: {
+            $in: req.body.deleteImages
+          }
+        }
+      }
+    });
   }
   await project.save();
   // const project = await Project.findByIdAndUpdate(id, req.body.project, {
@@ -218,7 +231,7 @@ app.put('/projects/:id', isLoggedIn, upload.array('image') ,isProjectAuthor, cat
   // });
   req.flash('success', 'Successfully edited your project!');
   res.redirect(`/projects/${id}`);
-  
+
 }))
 
 app.delete('/projects/:id', isLoggedIn, isProjectAuthor, catchAsync(async (req, res) => {
@@ -243,10 +256,13 @@ app.post('/projects/:id/rating', isLoggedIn, validateRating, catchAsync(async (r
   rating.author = req.user._id;
   await rating.save();
   await project.save();
-  
+
   //updating the user activity page
   const projectOwner = await User.findById(project.author);
-  projectOwner.activity.projectRatings.push({project,rating});
+  projectOwner.activity.projectRatings.push({
+    project,
+    rating
+  });
 
   await projectOwner.save();
   console.log(projectOwner);
@@ -313,17 +329,17 @@ app.post('/register', upload.single('profilePic'), catchAsync(async (req, res) =
     })
   } catch (e) {
     req.flash('error', e.message);
-    res.redirect('/projects');
+    res.redirect('/');
   }
 }))
 
 app.get('/login', (req, res) => {
-  res.render('user/login');
+  res.render('home');
 })
 
 app.post('/login', passport.authenticate('local', {
   failureFlash: true,
-  failureRedirec: '/login'
+  failureRedirect: '/'
 }), (req, res) => {
   req.flash('success', 'Welcome Back!');
   const redirectUrl = req.session.returnLink || '/projects';
@@ -334,7 +350,7 @@ app.post('/login', passport.authenticate('local', {
 app.get('/logout', (req, res) => {
   req.logout();
   req.flash('success', 'GOODBYE!');
-  res.redirect('/projects');
+  res.redirect('/');
 })
 
 app.get('/user/:id', isLoggedIn, catchAsync(async (req, res) => {
@@ -352,8 +368,58 @@ app.get('/user/:id', isLoggedIn, catchAsync(async (req, res) => {
   });
 }))
 
+app.get('/user/:id/edit', isLoggedIn, catchAsync(async (req, res) => {
+  const {
+    id
+  } = req.params;
+  const user = await User.findById(id);
+  res.render('user/edit', {
+    user
+  });
+}))
 
-app.get('/user/:id/activity',isLoggedIn, catchAsync(async (req, res) => {
+
+app.put('/user/:id', isLoggedIn, upload.single('profilePic'), catchAsync(async (req, res) => {
+  const {
+    id
+  } = req.params;
+  const user = await User.findById(id);
+  const {
+    username,
+    email,
+    bio
+  } = req.body;
+  let path, filename;
+  if (req.file) {
+    path = req.file.path;
+    filename = req.file.filename;
+  } else {
+    path = user.profilePic.url;
+    filename = user.profilePic.filename;
+  }
+
+  const profPic = {
+    url: path,
+    filename: filename,
+  };
+  user.profilePic = profPic;
+  user.email = email;
+  user.bio = bio;
+  user.username = username;
+  await user.save();
+
+  req.login(user, err => {
+    if (err) {
+      return next(err);
+    }
+    req.flash('success', 'Welcome to the Project Showcase');
+    res.redirect('/projects');
+  })
+
+
+}))
+
+app.get('/user/:id/activity', isLoggedIn, catchAsync(async (req, res) => {
   const {
     id
   } = req.params;
@@ -363,16 +429,16 @@ app.get('/user/:id/activity',isLoggedIn, catchAsync(async (req, res) => {
       path: 'ratings'
     }
   }).populate('friends').populate('activity.collabRequests').populate({
-    path:'activity.projectRatings',
-    populate:{
-      path:'project'
+    path: 'activity.projectRatings',
+    populate: {
+      path: 'project'
     }
   }).populate({
-    path:'activity.projectRatings',
-    populate:{
-      path:'rating',
-      populate:{
-        path:'author'
+    path: 'activity.projectRatings',
+    populate: {
+      path: 'rating',
+      populate: {
+        path: 'author'
       }
     }
   });
@@ -445,12 +511,12 @@ app.post('/user/:fromUserId/collab/:toUserId/:requestStatus', isLoggedIn, catchA
   }
 }))
 
-app.delete('/user/:fromUserId/collab/:toUserId',isLoggedIn,catchAsync(async(req,res)=>{
+app.delete('/user/:fromUserId/collab/:toUserId', isLoggedIn, catchAsync(async (req, res) => {
   const {
     fromUserId,
     toUserId
   } = req.params;
-  const toUser = await  User.findById(toUserId).populate('friends');
+  const toUser = await User.findById(toUserId).populate('friends');
   const fromUser = await User.findById(fromUserId).populate('friends');
   toUser.friends = toUser.friends.filter(e => !e.equals(fromUser._id));
   fromUser.friends = fromUser.friends.filter(e => !e.equals(toUser._id));
@@ -461,8 +527,10 @@ app.delete('/user/:fromUserId/collab/:toUserId',isLoggedIn,catchAsync(async(req,
 }))
 
 
-app.get('/user/:id/messages',isLoggedIn,catchAsync(async(req,res)=>{
-  const {id} = req.params;
+app.get('/user/:id/messages', isLoggedIn, catchAsync(async (req, res) => {
+  const {
+    id
+  } = req.params;
   const user = await User.findById(id).populate({
     path: 'projects',
     populate: {
@@ -470,31 +538,49 @@ app.get('/user/:id/messages',isLoggedIn,catchAsync(async(req,res)=>{
     }
   }).populate('friends');
 
-  res.render('user/messages',{user});
+  res.render('user/messages', {
+    user
+  });
 }))
 
-app.get('/user/:currUser/messages/:currFriend',catchAsync(async (req,re)=>{
-  const {currUser,currFriend} = req.params;
-  const messageBox = await MessageBox.findOne({$or:[{user1:currUser,user2:currFriend},{user1:currFriend,user2:currUser}]}).populate('messages');
+app.get('/user/:currUser/messages/:currFriend', catchAsync(async (req, re) => {
+  const {
+    currUser,
+    currFriend
+  } = req.params;
+  const messageBox = await MessageBox.findOne({
+    $or: [{
+      user1: currUser,
+      user2: currFriend
+    }, {
+      user1: currFriend,
+      user2: currUser
+    }]
+  }).populate('messages');
 
   res.send(messageBox);
 
 }))
 
-app.post('/user/:currUser/messages/:currFriend',catchAsync(async (req,res)=>{
-  const {currUser,currFriend} = req.params;
-  const {message} = req.body;
+app.post('/user/:currUser/messages/:currFriend', catchAsync(async (req, res) => {
+  const {
+    currUser,
+    currFriend
+  } = req.params;
+  const {
+    message
+  } = req.body;
   console.log('IN THE POST ROUTE!!');
-  createMessages(currUser,currFriend,message);
+  createMessages(currUser, currFriend, message);
   res.sendStatus(200);
 }))
 
 
-io.on('connection',(socket)=>{
+io.on('connection', (socket) => {
   console.log('SOCKET CONNECTED!');
-  socket.on('chat-message',async (currUser,currFriend,msg)=>{
+  socket.on('chat-message', async (currUser, currFriend, msg) => {
     console.log(`from ${currUser} to ${currFriend} message is ${msg}`);
-    
+
     // if(createMessages(currUser,currFriend,msg)){
     //   console.log('TRUEEEE');
     // }
@@ -508,7 +594,7 @@ io.on('connection',(socket)=>{
     // const messageBox = await MessageBox.findOne({$or:[{user1:currUser,user2:currFriend},{user1:currFriend,user2:currUser}]}).populate('messages');
 
     // socket.emit('messages-list',messageBox);
-    
+
   })
 })
 
@@ -538,4 +624,3 @@ const PORT = process.env.PORT || 3000
 httpServer.listen(PORT, () => {
   console.log('SERVER STARTED ON PORT 3000');
 })
-

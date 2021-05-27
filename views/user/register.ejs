@@ -1,38 +1,14 @@
 <% layout('layouts/boilerplate') -%>
 <link rel="stylesheet" href="/styles/user.register.css">
 
-<!-- <form action="/register" method="POST" novalidate class="validated-form" enctype="multipart/form-data">
-  <div class="mb-3">
-    <label for="username" class="form-label">Username:</label>
-    <input type="text" name="username" class="form-control" id="username" required>
-    <div class="valid-feedback">Looks good!</div>
-  </div>
-  <div class="mb-3">
-    <label for="email" class="form-label">Email:</label>
-    <input type="email" name="email" class="form-control" id="email" required>
-    <div class="valid-feedback">Looks good!</div>
-  </div>
-  <div class="mb-4">
-    <label for="password" class="form-label">Password:</label>
-    <input type="password" name="password" class="form-control" id="password" required>
-    <div class="valid-feedback">Looks good!</div>
-  </div>
-  <div class="input-group mb-3">
-    <input type="file" class="form-control" id="inputGroupFile02" name="profilePic">
-    <label class="input-group-text" for="inputGroupFile02">Profile Pic</label>
-  </div>
-
-  <button class="btn btn-success">Sign UP</button>
-</form> -->
-
 <div class="row">
   <div class="col-6 offset-3">
-    <div class="card shadow">
-      <div class="profile-pic-section">
+    <div class="card register-section">
+      <!-- <div class="profile-pic-section">
         <div class="profile-pic-container"></div>
-      </div>
+      </div> -->
       <div class="card-body">
-        <h5 class="card-title">Register</h5>
+        <h5 class="card-title register-txt">Register</h5>
         <form action="/register" method="POST" novalidate class="validated-form" enctype="multipart/form-data">
           <div class="mb-3">
             <label for="username" class="form-label">Username:</label>
@@ -59,8 +35,13 @@
             <input type="file" class="form-control" id="inputGroupFile02" name="profilePic">
             <label class="input-group-text" for="inputGroupFile02">Profile Pic</label>
           </div>
-          <button class="btn btn-success">Sign UP</button>
+          <button class="register-btn">Sign UP</button>
         </form>
+      </div>
+    </div>
+    <div class="card login-section mt-3">
+      <div class="card-body">
+        <h5 class="card-title d-inline">Already have an account? <a href="/">Login</a></h5>
       </div>
     </div>
   </div>

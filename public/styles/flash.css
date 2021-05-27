@@ -1,0 +1,14 @@
+.success-flash{
+  background-color: transparent;
+  color: #7209b7;
+  border: 3px solid #7209b7;
+  position: relative;
+}
+
+.error-flash{
+  background-color: transparent;
+  color: red;
+  border: 3px solid red;
+  position: relative;
+
+}

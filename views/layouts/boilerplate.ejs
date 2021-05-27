@@ -15,8 +15,8 @@
 
 <body>
   <%- include('../partials/navbar.ejs')  %> 
-  <div id="invisible-space"></div>
-  <main class="container mt-5">
+  <div id="invisible-space"></div> 
+  <main class="mt-5">
     <%- include('../partials/flash.ejs')  %> 
     <%- body -%>
   </main>
@@ -26,6 +26,12 @@
   </script>
   <script src="/scripts/validateForm.js"></script>
   <script src="/scripts/calculateRating.js"></script>
+  <script>
+    const mainC = document.querySelector('main');
+    if(window.innerWidth>860){
+      mainC.classList.add('container');
+    }
+  </script>
 </body>
 
 </html>

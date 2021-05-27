@@ -29,3 +29,61 @@
   width: 7vh;
   height: 7vh;
 }
+
+.post-project-txt{
+  background-color: #7209b7;
+  background-image: -webkit-gradient(
+    linear,
+    left top,
+    right top,
+    color-stop(0, #7209b7),
+    color-stop(0.6, #b5179e),
+    color-stop(1, #b5179e)
+  );
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.post-project-section{
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  border: none;
+  border-radius: 0;
+}
+
+.choose-stack-btn{
+  
+  width: fit-content;
+  height: fit-content;
+  padding: 0.5em 1.5em;
+  margin: 1em auto;
+  color: #7209b7;
+  transition: all 0.2s ease-in-out;
+  box-sizing: border-box;
+  border: 2px solid #7209b7;
+  background-color: white;
+}
+.choose-stack-btn:hover{
+  
+  color: white;
+  border: 2px solid white;
+  background: linear-gradient(90deg, #7209b7 0%, #b5179e 100%);
+}
+
+.create-project-btn{
+  width: fit-content;
+  height: fit-content;
+  padding: 0.5em 1.5em;
+  margin: 1em auto;
+  color: #7209b7;
+  background: none;
+  background-color: white;
+  border: 2px solid #7209b7;
+  
+}
+.create-project-btn:hover{
+  
+  color: white;
+  border: 2px solid white;
+  background: linear-gradient(90deg, #7209b7 0%, #b5179e 100%);
+}
